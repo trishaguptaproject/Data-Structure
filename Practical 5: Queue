@@ -1,0 +1,363 @@
+#Aim: 5. Write a program to implement Queue with insertion, deletion, traversal operations
+# CL CODE:
+import os
+
+class Queue:
+    def __init__(self, max_size):
+        self.queue = []
+        self.max_size = max_size
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) >= self.max_size
+
+    def enqueue(self, item):
+        if self.is_full():
+            print("\nQueue is Full! Cannot enqueue.")
+        else:
+            self.queue.append(item)
+            print(f"\n'{item}' added successfully.")
+
+    def dequeue(self):
+        if self.is_empty():
+            print("\nQueue is Empty! Cannot dequeue.")
+        else:
+            item = self.queue.pop(0)
+            print(f"\nRemoved Item: {item}")
+
+    def peek(self):
+        if self.is_empty():
+            print("\nQueue is Empty!")
+        else:
+            print(f"\nFront Item: {self.queue[0]}")
+
+    def traverse(self):
+        if self.is_empty():
+            print("\nQueue is Empty!")
+        else:
+            print("\nQueue Elements:")
+            for item in self.queue:
+                print("->", item)
+
+    def display_list(self):
+        if self.is_empty():
+            print("\nQueue is Empty!")
+        else:
+            print("\nCurrent Queue")
+            print("-" * 30)
+            for i, item in enumerate(self.queue, start=1):
+                print(f"{i}. {item}")
+            print("-" * 30)
+
+    def clear_queue(self):
+        self.queue.clear()
+        print("\nQueue Cleared Successfully!")
+
+    def size(self):
+        print(f"\nCurrent Queue Size: {len(self.queue)}")
+
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+#Main Program
+
+while True:
+    try:
+        max_size = int(input("Enter Maximum Queue Size: "))
+        if max_size > 0:
+            break
+        else:
+            print("Please enter a number greater than 0.")
+    except ValueError:
+        print("Please enter a valid integer.")
+
+q = Queue(max_size)
+
+while True:
+    clear_screen()
+
+    print("=" * 40)
+    print("      QUEUE OPERATIONS MENU")
+    print("=" * 40)
+    print("1. Enqueue")
+    print("2. Dequeue")
+    print("3. Peek Front")
+    print("4. Traverse Queue")
+    print("5. Display Queue")
+    print("6. Check Empty")
+    print("7. Check Full")
+    print("8. Queue Size")
+    print("9. Clear Queue")
+    print("10. Exit")
+    print("=" * 40)
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        item = input("Enter Item: ")
+        q.enqueue(item)
+
+    elif choice == "2":
+        q.dequeue()
+
+    elif choice == "3":
+        q.peek()
+
+    elif choice == "4":
+        q.traverse()
+
+    elif choice == "5":
+        q.display_list()
+
+    elif choice == "6":
+        if q.is_empty():
+            print("\nQueue is Empty.")
+        else:
+            print("\nQueue is NOT Empty.")
+
+    elif choice == "7":
+        if q.is_full():
+            print("\nQueue is Full.")
+        else:
+            print("\nQueue is NOT Full.")
+
+    elif choice == "8":
+        q.size()
+
+    elif choice == "9":
+        q.clear_queue()
+
+    elif choice == "10":
+        clear_screen()
+        print("========================================")
+        print("Thank You for Using Queue Program")
+        print("Goodbye!")
+        print("========================================")
+        break
+
+    else:
+        print("\nInvalid Choice! Please try again.")
+
+    input("\nPress Enter to Continue...")
+
+
+#GUI CODE:
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+
+class Queue:
+    def __init__(self, max_size):
+        self.queue = []
+        self.max_size = max_size
+
+    def enqueue(self, item):
+        if len(self.queue) >= self.max_size:
+            return False, "Queue is Full!"
+        self.queue.append(item)
+        return True, f"'{item}' added successfully."
+
+    def dequeue(self):
+        if not self.queue:
+            return False, "Queue is Empty!"
+        return True, f"Removed Item: {self.queue.pop(0)}"
+
+    def peek(self):
+        if not self.queue:
+            return False, "Queue is Empty!"
+        return True, f"Front Item: {self.queue[0]}"
+
+    def clear(self):
+        self.queue.clear()
+        return True, "Queue Cleared Successfully!"
+
+    def size(self):
+        return len(self.queue)
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) == self.max_size
+
+    def get_items(self):
+        return self.queue
+
+
+class QueueGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Queue Operations")
+        self.root.geometry("780x650")
+        self.root.configure(bg="#E6E6FA")      # Lavender
+        self.root.resizable(False, False)
+
+        max_size = simpledialog.askinteger(
+            "Queue Size",
+            "Enter Maximum Queue Size:",
+            minvalue=1,
+            parent=root
+        )
+
+        if max_size is None:
+            root.destroy()
+            return
+
+        self.queue = Queue(max_size)
+
+        # Heading
+        title = tk.Label(
+            root,
+            text="QUEUE OPERATIONS",
+            bg="#E6E6FA",
+            fg="#6A5ACD",      # SlateBlue
+            font=("Arial", 24, "bold")
+        )
+        title.pack(pady=15)
+
+        # Entry Box
+        self.entry = tk.Entry(
+            root,
+            width=30,
+            font=("Arial", 14),
+            justify="center",
+            bg="white",
+            fg="#4B0082",      # Indigo
+            relief="solid",
+            bd=2
+        )
+        self.entry.pack(pady=10)
+
+        frame = tk.Frame(root, bg="#E6E6FA")
+        frame.pack()
+
+        buttons = [
+            ("Enqueue", self.enqueue),
+            ("Dequeue", self.dequeue),
+            ("Peek", self.peek),
+            ("Display", self.display),
+            ("Traverse", self.display),
+            ("Queue Size", self.size),
+            ("Check Empty", self.empty),
+            ("Check Full", self.full),
+            ("Clear Queue", self.clear),
+            ("Exit", root.destroy)
+        ]
+
+        row = 0
+        col = 0
+
+        for text, command in buttons:
+
+            btn = tk.Button(
+                frame,
+                text=text,
+                command=command,
+                width=18,
+                height=2,
+                bg="#D8BFD8",          # Thistle
+                fg="#4B0082",          # Indigo
+                activebackground="#C8A2C8",
+                activeforeground="white",
+                font=("Arial", 11, "bold"),
+                relief="raised",
+                bd=2,
+                cursor="hand2"
+            )
+
+            btn.grid(row=row, column=col, padx=10, pady=10)
+
+            # Hover Effect
+            btn.bind("<Enter>", lambda e, b=btn: b.config(bg="#C8A2C8"))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg="#D8BFD8"))
+
+            col += 1
+            if col == 2:
+                col = 0
+                row += 1
+
+        # Output Box
+        self.output = tk.Text(
+            root,
+            width=70,
+            height=12,
+            font=("Consolas", 12),
+            bg="white",
+            fg="#4B0082",      # Indigo
+            relief="solid",
+            bd=2
+        )
+
+        self.output.pack(pady=20)
+
+        self.display()
+
+    def write(self, text):
+        self.output.delete("1.0", tk.END)
+        self.output.insert(tk.END, text)
+
+    def display(self):
+        if self.queue.is_empty():
+            self.write("Queue is Empty!")
+        else:
+            text = "Current Queue\n"
+            text += "-" * 35 + "\n"
+
+            for i, item in enumerate(self.queue.get_items(), start=1):
+                text += f"{i}. {item}\n"
+
+            self.write(text)
+
+    def enqueue(self):
+        item = self.entry.get().strip()
+
+        if item == "":
+            messagebox.showwarning("Warning", "Please enter an item.")
+            return
+
+        status, msg = self.queue.enqueue(item)
+        messagebox.showinfo("Queue", msg)
+
+        self.entry.delete(0, tk.END)
+        self.display()
+
+    def dequeue(self):
+        status, msg = self.queue.dequeue()
+        messagebox.showinfo("Queue", msg)
+        self.display()
+
+    def peek(self):
+        status, msg = self.queue.peek()
+        messagebox.showinfo("Queue", msg)
+
+    def clear(self):
+        self.queue.clear()
+        messagebox.showinfo("Queue", "Queue Cleared Successfully!")
+        self.display()
+
+    def size(self):
+        messagebox.showinfo(
+            "Queue Size",
+            f"Current Queue Size : {self.queue.size()}"
+        )
+
+    def empty(self):
+        if self.queue.is_empty():
+            messagebox.showinfo("Queue", "Queue is Empty")
+        else:
+            messagebox.showinfo("Queue", "Queue is NOT Empty")
+
+    def full(self):
+        if self.queue.is_full():
+            messagebox.showinfo("Queue", "Queue is Full")
+        else:
+            messagebox.showinfo("Queue", "Queue is NOT Full")
+
+
+root = tk.Tk()
+QueueGUI(root)
+root.mainloop()
