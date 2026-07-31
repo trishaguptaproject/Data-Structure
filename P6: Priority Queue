@@ -1,0 +1,378 @@
+#Practical 6 : Priority Queue(Command line code)
+
+class PriorityQueue:
+    def __init__(self, max_capacity):
+        self.queue = []
+        self.max_capacity = max_capacity
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) >= self.max_capacity
+
+    def enqueue(self, item, priority):
+        if self.is_full():
+            print("Priority Queue is full. Cannot enqueue.")
+            return
+
+        self.queue.append((item, priority))
+        self.queue.sort(key=lambda x: x[1])   # Sort according to priority
+        print(f"Enqueued: {item} with priority {priority}")
+
+    def dequeue(self):
+        if self.is_empty():
+            print("Priority Queue is empty. Cannot dequeue.")
+            return
+
+        item, priority = self.queue.pop(0)
+        print(f"Dequeued: {item} with priority {priority}")
+
+    def traverse(self):
+        if self.is_empty():
+            print("Priority Queue is empty.")
+        else:
+            print("\nPriority Queue contains:")
+            for item, priority in self.queue:
+                print(f"Item: {item}, Priority: {priority}")
+
+    def show_ascending(self):
+        if self.is_empty():
+            print("Priority Queue is empty.")
+        else:
+            print("\nPriority Queue in Ascending Order:")
+            for item, priority in sorted(self.queue, key=lambda x: x[1]):
+                print(f"Item: {item}, Priority: {priority}")
+
+    def show_descending(self):
+        if self.is_empty():
+            print("Priority Queue is empty.")
+        else:
+            print("\nPriority Queue in Descending Order:")
+            for item, priority in sorted(self.queue, key=lambda x: x[1], reverse=True):
+                print(f"Item: {item}, Priority: {priority}")
+
+
+def main():
+    while True:
+        try:
+            max_capacity = int(input("Enter the maximum capacity of the Priority Queue: "))
+            if max_capacity > 0:
+                break
+            else:
+                print("Capacity must be greater than 0.")
+        except ValueError:
+            print("Invalid input. Please enter an integer value.")
+
+    pq = PriorityQueue(max_capacity)
+
+    while True:
+        print("\n========== Priority Queue Menu ==========")
+        print("1. Enqueue")
+        print("2. Dequeue")
+        print("3. Traverse")
+        print("4. Check if Empty")
+        print("5. Check if Full")
+        print("6. Show Ascending Order")
+        print("7. Show Descending Order")
+        print("8. Exit")
+
+        try:
+            choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("Invalid choice. Please enter a number between 1 and 8.")
+            continue
+
+        if choice == 1:
+            item = input("Enter item to enqueue: ")
+            try:
+                priority = int(input("Enter priority: "))
+                pq.enqueue(item, priority)
+            except ValueError:
+                print("Invalid priority. Please enter an integer.")
+
+        elif choice == 2:
+            pq.dequeue()
+
+        elif choice == 3:
+            pq.traverse()
+
+        elif choice == 4:
+            if pq.is_empty():
+                print("Priority Queue is empty.")
+            else:
+                print("Priority Queue is not empty.")
+
+        elif choice == 5:
+            if pq.is_full():
+                print("Priority Queue is full.")
+            else:
+                print("Priority Queue is not full.")
+
+        elif choice == 6:
+            pq.show_ascending()
+
+        elif choice == 7:
+            pq.show_descending()
+
+        elif choice == 8:
+            print("Exiting... Thank You!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
+
+# Practical 6 : Priority Queue(GUI Version code)
+
+import tkinter as tk
+from tkinter import messagebox
+
+
+class PriorityQueue:
+    def __init__(self, capacity):
+        self.queue = []
+        self.capacity = capacity
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) >= self.capacity
+
+    def enqueue(self, item, priority):
+        if self.is_full():
+            return False
+        self.queue.append((item, priority))
+        self.queue.sort(key=lambda x: x[1])  # Sort by priority (Low number = High priority)
+        return True
+
+    def dequeue(self):
+        if self.is_empty():
+            return None
+        return self.queue.pop(0)
+
+    def get_queue(self):
+        if self.is_empty():
+            return "Priority Queue is Empty."
+
+        text = "PRIORITY QUEUE\n"
+        text += "=" * 45 + "\n"
+        text += f"{'Item':<20}{'Priority':<10}\n"
+        text += "=" * 45 + "\n"
+
+        for item, priority in self.queue:
+            text += f"{item:<20}{priority:<10}\n"
+
+        return text
+
+    def ascending(self):
+        if self.is_empty():
+            return "Priority Queue is Empty."
+
+        text = "ASCENDING ORDER\n"
+        text += "=" * 45 + "\n"
+        text += f"{'Item':<20}{'Priority':<10}\n"
+        text += "=" * 45 + "\n"
+
+        for item, priority in sorted(self.queue, key=lambda x: x[1]):
+            text += f"{item:<20}{priority:<10}\n"
+
+        return text
+
+    def descending(self):
+        if self.is_empty():
+            return "Priority Queue is Empty."
+
+        text = "DESCENDING ORDER\n"
+        text += "=" * 45 + "\n"
+        text += f"{'Item':<20}{'Priority':<10}\n"
+        text += "=" * 45 + "\n"
+
+        for item, priority in sorted(self.queue, key=lambda x: x[1], reverse=True):
+            text += f"{item:<20}{priority:<10}\n"
+
+        return text
+
+
+#Main Window 
+
+root = tk.Tk()
+root.title("Priority Queue using Python Tkinter")
+root.state("zoomed")  # Opens in full screen (Windows)
+root.configure(bg="#F2F2F2")
+
+pq = None
+
+
+#Functions
+
+def update_output(text):
+    output.delete(1.0, tk.END)
+    output.insert(tk.END, text)
+
+
+def create_queue():
+    global pq
+
+    try:
+        size = int(capacity_entry.get())
+
+        if size <= 0:
+            messagebox.showerror("Error", "Capacity must be greater than 0")
+            return
+
+        pq = PriorityQueue(size)
+        update_output("Priority Queue Created Successfully.")
+
+    except ValueError:
+        messagebox.showerror("Error", "Enter Valid Capacity")
+
+
+def enqueue_item():
+    if pq is None:
+        messagebox.showerror("Error", "Create Queue First")
+        return
+
+    item = item_entry.get().strip()
+
+    if item == "":
+        messagebox.showerror("Error", "Enter Item")
+        return
+
+    try:
+        priority = int(priority_entry.get())
+    except ValueError:
+        messagebox.showerror("Error", "Enter Valid Priority")
+        return
+
+    if pq.enqueue(item, priority):
+        update_output(pq.get_queue())
+    else:
+        messagebox.showerror("Error", "Priority Queue is Full")
+
+    item_entry.delete(0, tk.END)
+    priority_entry.delete(0, tk.END)
+
+
+def dequeue_item():
+    if pq is None:
+        messagebox.showerror("Error", "Create Queue First")
+        return
+
+    item = pq.dequeue()
+
+    if item is None:
+        messagebox.showerror("Error", "Priority Queue is Empty")
+    else:
+        messagebox.showinfo(
+            "Dequeued",
+            f"Item : {item[0]}\nPriority : {item[1]}"
+        )
+        update_output(pq.get_queue())
+
+
+def traverse():
+    if pq:
+        update_output(pq.get_queue())
+
+
+def ascending():
+    if pq:
+        update_output(pq.ascending())
+
+
+def descending():
+    if pq:
+        update_output(pq.descending())
+
+
+def check_empty():
+    if pq:
+        if pq.is_empty():
+            messagebox.showinfo("Status", "Priority Queue is Empty")
+        else:
+            messagebox.showinfo("Status", "Priority Queue is Not Empty")
+
+
+def check_full():
+    if pq:
+        if pq.is_full():
+            messagebox.showinfo("Status", "Priority Queue is Full")
+        else:
+            messagebox.showinfo("Status", "Priority Queue is Not Full")
+
+
+def clear_output():
+    output.delete(1.0, tk.END)
+
+
+#Title 
+
+title = tk.Label(
+    root,
+    text="Priority Queue",
+    font=("Arial", 22, "bold"),
+    bg="#F2F2F2",
+    fg="darkblue"
+)
+title.pack(pady=10)
+
+#Input Frame 
+
+frame = tk.Frame(root, bg="#F2F2F2")
+frame.pack(fill="x", padx=20)
+
+#Row 1
+tk.Label(frame, text="Capacity:", font=("Arial", 11), bg="#F2F2F2").grid(row=0, column=0, padx=5, pady=8)
+
+capacity_entry = tk.Entry(frame, width=15, font=("Arial", 11))
+capacity_entry.grid(row=0, column=1)
+
+tk.Button(frame, text="Create Queue", width=15, command=create_queue).grid(row=0, column=2, padx=10)
+
+#Row 2
+tk.Label(frame, text="Item:", font=("Arial", 11), bg="#F2F2F2").grid(row=1, column=0, padx=5, pady=8)
+
+item_entry = tk.Entry(frame, width=15, font=("Arial", 11))
+item_entry.grid(row=1, column=1)
+
+tk.Label(frame, text="Priority:", font=("Arial", 11), bg="#F2F2F2").grid(row=1, column=2)
+
+priority_entry = tk.Entry(frame, width=15, font=("Arial", 11))
+priority_entry.grid(row=1, column=3)
+
+tk.Button(frame, text="Enqueue", width=12, command=enqueue_item).grid(row=1, column=4, padx=5)
+tk.Button(frame, text="Dequeue", width=12, command=dequeue_item).grid(row=1, column=5, padx=5)
+
+# Row 3
+tk.Button(frame, text="Traverse", width=12, command=traverse).grid(row=2, column=0, pady=10)
+tk.Button(frame, text="Ascending", width=12, command=ascending).grid(row=2, column=1)
+tk.Button(frame, text="Descending", width=12, command=descending).grid(row=2, column=2)
+tk.Button(frame, text="Check Empty", width=12, command=check_empty).grid(row=2, column=3)
+tk.Button(frame, text="Check Full", width=12, command=check_full).grid(row=2, column=4)
+tk.Button(frame, text="Clear Output", width=12, command=clear_output).grid(row=2, column=5)
+
+#Output 
+
+output_frame = tk.Frame(root)
+output_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+scrollbar = tk.Scrollbar(output_frame)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+output = tk.Text(
+    output_frame,
+    font=("Consolas", 13),
+    wrap="none",
+    yscrollcommand=scrollbar.set
+)
+
+output.pack(fill="both", expand=True)
+
+scrollbar.config(command=output.yview)
+#Run
+root.mainloop()
