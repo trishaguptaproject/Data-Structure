@@ -1,0 +1,1953 @@
+#9. A. linear probing (hash)
+# Practical 9(A): Hashing - Linear Probing
+def linear_probing_insert(hash_size, data):
+    hash_table = [None] * hash_size
+
+    for value in data:
+        hash_index = value % hash_size
+        original_index = hash_index
+
+        # Find an empty position using linear probing
+        while hash_table[hash_index] is not None:
+            hash_index = (hash_index + 1) % hash_size
+
+            # Check if the hash table is full
+            if hash_index == original_index:
+                print("Hash table is full!")
+                return hash_table
+
+        hash_table[hash_index] = value
+
+    return hash_table
+
+
+# Input hash table size
+hash_size = int(input("Enter size of hash table: "))
+
+# Input data
+data_input = input("Enter data (space-separated numbers): ")
+data = list(map(int, data_input.split()))
+
+# Insert data into hash table
+final_table = linear_probing_insert(hash_size, data)
+
+# Display final hash table
+print("\nFinal Hash Table:")
+for i, value in enumerate(final_table):
+    print("Index", i, ":", value)
+
+
+#GUI version of 9. A. linear probing (hash)
+import tkinter as tk
+from tkinter import messagebox
+
+# Linear Probing Function
+def linear_probing():
+    try:
+        # Get hash table size
+        hash_size = int(size_entry.get())
+
+        if hash_size <= 0:
+            messagebox.showerror(
+                "Invalid Input",
+                "Hash table size must be greater than 0."
+            )
+            return
+
+        # Get data
+        data_input = data_entry.get().strip()
+
+        if data_input == "":
+            messagebox.showerror(
+                "Invalid Input",
+                "Please enter data."
+            )
+            return
+
+        # Convert input into integers
+        data = list(map(int, data_input.split()))
+
+        # Create empty hash table
+        hash_table = [None] * hash_size
+
+        # Insert each value using linear probing
+        for value in data:
+
+            # Calculate initial hash index
+            hash_index = value % hash_size
+
+            original_index = hash_index
+
+            # Linear probing
+            while hash_table[hash_index] is not None:
+
+                hash_index = (hash_index + 1) % hash_size
+
+                # Check if table is full
+                if hash_index == original_index:
+                    messagebox.showwarning(
+                        "Hash Table Full",
+                        "Hash table is full!\n"
+                        "Some values could not be inserted."
+                    )
+
+                    display_table(hash_table)
+                    return
+
+            # Insert value
+            hash_table[hash_index] = value
+
+        # Display final table
+        display_table(hash_table)
+
+    except ValueError:
+        messagebox.showerror(
+            "Invalid Input",
+            "Please enter valid numbers only.\n\n"
+            "Example: 10 15 7 12"
+        )
+
+# Display Hash Table
+def display_table(hash_table):
+
+    # Remove old result
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    # Result heading
+    result_heading = tk.Label(
+        result_frame,
+        text="FINAL HASH TABLE",
+        font=("Arial", 18, "bold"),
+        bg="#EDE7F6",
+        fg="#4A148C"
+    )
+    result_heading.pack(pady=15)
+
+    # Table header
+    header = tk.Frame(
+        result_frame,
+        bg="#7B1FA2"
+    )
+    header.pack(fill="x", padx=20)
+
+    index_header = tk.Label(
+        header,
+        text="INDEX",
+        font=("Arial", 12, "bold"),
+        width=15,
+        bg="#7B1FA2",
+        fg="white"
+    )
+    index_header.pack(side="left", padx=5, pady=8)
+
+    value_header = tk.Label(
+        header,
+        text="VALUE",
+        font=("Arial", 12, "bold"),
+        width=15,
+        bg="#7B1FA2",
+        fg="white"
+    )
+    value_header.pack(side="left", padx=5, pady=8)
+
+    # Display every index and value
+    for i, value in enumerate(hash_table):
+
+        row_color = "#F3E5F5" if i % 2 == 0 else "#E1BEE7"
+
+        row = tk.Frame(
+            result_frame,
+            bg=row_color
+        )
+        row.pack(fill="x", padx=20)
+
+        index_label = tk.Label(
+            row,
+            text=str(i),
+            font=("Arial", 12, "bold"),
+            width=15,
+            bg=row_color,
+            fg="#4A148C"
+        )
+        index_label.pack(side="left", padx=5, pady=5)
+
+        if value is None:
+            display_value = "Empty"
+        else:
+            display_value = str(value)
+
+        value_label = tk.Label(
+            row,
+            text=display_value,
+            font=("Arial", 12, "bold"),
+            width=15,
+            bg=row_color,
+            fg="#4A148C"
+        )
+        value_label.pack(side="left", padx=5, pady=5)
+
+# Clear Function
+def clear_all():
+
+    size_entry.delete(0, tk.END)
+    data_entry.delete(0, tk.END)
+
+    # Clear result area
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+# Main Window
+root = tk.Tk()
+
+root.title("Hashing - Linear Probing")
+root.geometry("650x700")
+
+# Purple background
+root.configure(bg="#F3E5F5")
+
+# Prevent resizing
+root.resizable(False, False)
+
+# Title
+title_frame = tk.Frame(
+    root,
+    bg="#4A148C"
+)
+title_frame.pack(fill="x")
+
+title_label = tk.Label(
+    title_frame,
+    text="HASHING - LINEAR PROBING",
+    font=("Arial", 24, "bold"),
+    bg="#4A148C",
+    fg="white",
+    pady=18
+)
+title_label.pack()
+
+# Practical Information
+info_label = tk.Label(
+    root,
+    text="Practical 9(A)  |  Data Structures",
+    font=("Arial", 13, "bold"),
+    bg="#F3E5F5",
+    fg="#6A1B9A"
+)
+info_label.pack(pady=15)
+
+# Input Frame
+input_frame = tk.Frame(
+    root,
+    bg="#E1BEE7",
+    bd=2,
+    relief="groove"
+)
+input_frame.pack(
+    padx=40,
+    pady=10,
+    fill="x"
+)
+
+
+# Hash table size label
+size_label = tk.Label(
+    input_frame,
+    text="Hash Table Size:",
+    font=("Arial", 12, "bold"),
+    bg="#E1BEE7",
+    fg="#4A148C"
+)
+size_label.grid(
+    row=0,
+    column=0,
+    padx=15,
+    pady=15,
+    sticky="w"
+)
+
+
+# Hash table size entry
+size_entry = tk.Entry(
+    input_frame,
+    font=("Arial", 12),
+    width=28,
+    bg="white",
+    fg="#4A148C",
+    insertbackground="#4A148C"
+)
+size_entry.grid(
+    row=0,
+    column=1,
+    padx=15,
+    pady=15
+)
+
+
+# Data label
+data_label = tk.Label(
+    input_frame,
+    text="Enter Data:",
+    font=("Arial", 12, "bold"),
+    bg="#E1BEE7",
+    fg="#4A148C"
+)
+data_label.grid(
+    row=1,
+    column=0,
+    padx=15,
+    pady=15,
+    sticky="w"
+)
+
+
+# Data entry
+data_entry = tk.Entry(
+    input_frame,
+    font=("Arial", 12),
+    width=28,
+    bg="white",
+    fg="#4A148C",
+    insertbackground="#4A148C"
+)
+data_entry.grid(
+    row=1,
+    column=1,
+    padx=15,
+    pady=15
+)
+
+# Buttons
+
+button_frame = tk.Frame(
+    root,
+    bg="#F3E5F5"
+)
+button_frame.pack(pady=20)
+
+
+# Insert button
+insert_button = tk.Button(
+    button_frame,
+    text="INSERT",
+    command=linear_probing,
+    font=("Arial", 12, "bold"),
+    bg="#7B1FA2",
+    fg="white",
+    activebackground="#4A148C",
+    activeforeground="white",
+    width=14,
+    height=2,
+    bd=0,
+    cursor="hand2"
+)
+insert_button.grid(
+    row=0,
+    column=0,
+    padx=10
+)
+
+
+# Clear button
+clear_button = tk.Button(
+    button_frame,
+    text="CLEAR",
+    command=clear_all,
+    font=("Arial", 12, "bold"),
+    bg="#AB47BC",
+    fg="white",
+    activebackground="#7B1FA2",
+    activeforeground="white",
+    width=14,
+    height=2,
+    bd=0,
+    cursor="hand2"
+)
+clear_button.grid(
+    row=0,
+    column=1,
+    padx=10
+)
+
+
+# Result Frame
+result_frame = tk.Frame(
+    root,
+    bg="#F3E5F5"
+)
+result_frame.pack(
+    fill="both",
+    expand=True,
+    padx=40,
+    pady=10
+)
+
+# Footer
+
+footer = tk.Label(
+    root,
+    text="Linear Probing | Data Structures",
+    font=("Arial", 10),
+    bg="#4A148C",
+    fg="white",
+    pady=8
+)
+footer.pack(
+    fill="x",
+    side="bottom"
+)
+# Run Application
+root.mainloop()
+
+#9. B. Write a python program to implement Breadth First Tree using Graph
+from collections import deque, defaultdict
+
+
+class Graph:
+
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    # Add a vertex
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    # Add an undirected edge
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    # Perform BFS and create BFS Tree
+    def bfs_tree(self, start):
+
+        visited = set()
+        bfs_tree = defaultdict(list)
+
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+
+            current = queue.popleft()
+
+            for neighbor in self.graph[current]:
+
+                if neighbor not in visited:
+
+                    visited.add(neighbor)
+
+                    bfs_tree[current].append(neighbor)
+
+                    queue.append(neighbor)
+
+        return bfs_tree
+
+    # Display graph
+    def display(self):
+
+        for vertex, edges in self.graph.items():
+            print(vertex, ":", edges)
+
+
+# Print BFS Tree
+def print_bfs_tree(bfs_tree, start):
+
+    print("\nBreadth-First Tree starting from", start, ":")
+
+    for vertex in bfs_tree:
+        print(vertex, ":", bfs_tree[vertex])
+
+
+# Main program
+if __name__ == "__main__":
+
+    # Create graph
+    g = Graph()
+
+    # Add vertices
+    for v in ['A', 'B', 'C', 'D', 'E', 'F']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('A', 'B')
+    g.add_edge('A', 'C')
+    g.add_edge('B', 'D')
+    g.add_edge('B', 'E')
+    g.add_edge('C', 'F')
+
+    # Display graph
+    print("Graph:")
+    g.display()
+
+    # Starting vertex
+    start_vertex = 'A'
+
+    # Perform BFS
+    bfs_tree = g.bfs_tree(start_vertex)
+
+    # Display BFS Tree
+    print_bfs_tree(bfs_tree, start_vertex)
+
+
+# GUI version:
+from collections import deque, defaultdict
+import tkinter as tk
+from tkinter import messagebox
+# Graph Class
+class Graph:
+
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def bfs_tree(self, start):
+        visited = set()
+        bfs_tree = defaultdict(list)
+
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            current = queue.popleft()
+
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    bfs_tree[current].append(neighbor)
+                    queue.append(neighbor)
+
+        return bfs_tree
+
+
+# Global Graph
+
+g = Graph()
+
+
+# Add Vertex
+
+def add_vertex():
+    vertex = vertex_entry.get().strip().upper()
+
+    if vertex == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter a vertex."
+        )
+        return
+
+    if vertex in g.graph:
+        messagebox.showwarning(
+            "Warning",
+            "Vertex already exists."
+        )
+        return
+
+    g.add_vertex(vertex)
+
+    vertex_entry.delete(0, tk.END)
+
+    display_graph()
+
+    messagebox.showinfo(
+        "Success",
+        "Vertex " + vertex + " added successfully."
+    )
+
+
+# Add Edge
+
+def add_edge():
+    vertex1 = vertex1_entry.get().strip().upper()
+    vertex2 = vertex2_entry.get().strip().upper()
+
+    if vertex1 == "" or vertex2 == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter both vertices."
+        )
+        return
+
+    if vertex1 not in g.graph or vertex2 not in g.graph:
+        messagebox.showerror(
+            "Error",
+            "Both vertices must exist before adding an edge."
+        )
+        return
+
+    if vertex1 == vertex2:
+        messagebox.showerror(
+            "Error",
+            "A vertex cannot be connected to itself."
+        )
+        return
+
+    if vertex2 in g.graph[vertex1]:
+        messagebox.showwarning(
+            "Warning",
+            "This edge already exists."
+        )
+        return
+
+    g.add_edge(vertex1, vertex2)
+
+    vertex1_entry.delete(0, tk.END)
+    vertex2_entry.delete(0, tk.END)
+
+    display_graph()
+
+    messagebox.showinfo(
+        "Success",
+        "Edge " + vertex1 + " - " + vertex2 +
+        " added successfully."
+    )
+
+
+# Perform BFS
+
+def perform_bfs():
+    start = start_entry.get().strip().upper()
+
+    if start == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter a starting vertex."
+        )
+        return
+
+    if start not in g.graph:
+        messagebox.showerror(
+            "Error",
+            "Starting vertex does not exist."
+        )
+        return
+
+    bfs_result = g.bfs_tree(start)
+
+    for widget in bfs_result_frame.winfo_children():
+        widget.destroy()
+
+    heading = tk.Label(
+        bfs_result_frame,
+        text="BREADTH-FIRST TREE",
+        font=("Arial", 17, "bold"),
+        bg="#FFFDE7",
+        fg="#8A6D00"
+    )
+    heading.pack(pady=10)
+
+    traversal = get_bfs_traversal(start)
+
+    traversal_label = tk.Label(
+        bfs_result_frame,
+        text="BFS Traversal: " + "  →  ".join(traversal),
+        font=("Arial", 13, "bold"),
+        bg="#FFF59D",
+        fg="#5D4E00",
+        padx=15,
+        pady=10
+    )
+    traversal_label.pack(
+        pady=5,
+        padx=20,
+        fill="x"
+    )
+
+    for vertex in bfs_result:
+        children = bfs_result[vertex]
+
+        row = tk.Frame(
+            bfs_result_frame,
+            bg="#FFFDE7"
+        )
+        row.pack(
+            fill="x",
+            padx=30,
+            pady=3
+        )
+
+        parent_label = tk.Label(
+            row,
+            text=vertex,
+            font=("Arial", 12, "bold"),
+            width=10,
+            bg="#FBC02D",
+            fg="white"
+        )
+        parent_label.pack(
+            side="left",
+            padx=5,
+            pady=5
+        )
+
+        child_text = ", ".join(children)
+
+        child_label = tk.Label(
+            row,
+            text="→  " + child_text,
+            font=("Arial", 12, "bold"),
+            bg="#FFF9C4",
+            fg="#5D4E00",
+            anchor="w"
+        )
+        child_label.pack(
+            side="left",
+            fill="x",
+            expand=True,
+            padx=5,
+            pady=5
+        )
+
+    if len(bfs_result) == 0:
+        no_edge = tk.Label(
+            bfs_result_frame,
+            text=start + " has no connected vertices.",
+            font=("Arial", 12),
+            bg="#FFFDE7",
+            fg="#5D4E00"
+        )
+        no_edge.pack(pady=10)
+
+
+# Get BFS Traversal
+
+def get_bfs_traversal(start):
+    visited = set()
+    queue = deque([start])
+    traversal = []
+
+    visited.add(start)
+
+    while queue:
+        current = queue.popleft()
+        traversal.append(current)
+
+        for neighbor in g.graph[current]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+    return traversal
+
+
+# Display Graph
+
+def display_graph():
+    for widget in graph_result_frame.winfo_children():
+        widget.destroy()
+
+    heading = tk.Label(
+        graph_result_frame,
+        text="CURRENT GRAPH",
+        font=("Arial", 16, "bold"),
+        bg="#FFFFFF",
+        fg="#8A6D00"
+    )
+    heading.pack(pady=8)
+
+    for vertex, edges in g.graph.items():
+
+        if edges:
+            edge_text = ", ".join(edges)
+        else:
+            edge_text = "No edges"
+
+        row = tk.Frame(
+            graph_result_frame,
+            bg="#FFF9C4"
+        )
+        row.pack(
+            fill="x",
+            padx=25,
+            pady=2
+        )
+
+        vertex_label = tk.Label(
+            row,
+            text=vertex,
+            font=("Arial", 11, "bold"),
+            width=8,
+            bg="#FBC02D",
+            fg="white"
+        )
+        vertex_label.pack(
+            side="left",
+            padx=5,
+            pady=4
+        )
+
+        edges_label = tk.Label(
+            row,
+            text=edge_text,
+            font=("Arial", 11),
+            bg="#FFF9C4",
+            fg="#5D4E00",
+            anchor="w"
+        )
+        edges_label.pack(
+            side="left",
+            fill="x",
+            expand=True,
+            padx=5
+        )
+
+
+# Clear All
+
+def clear_all():
+    global g
+
+    g = Graph()
+
+    vertex_entry.delete(0, tk.END)
+    vertex1_entry.delete(0, tk.END)
+    vertex2_entry.delete(0, tk.END)
+    start_entry.delete(0, tk.END)
+
+    for widget in graph_result_frame.winfo_children():
+        widget.destroy()
+
+    for widget in bfs_result_frame.winfo_children():
+        widget.destroy()
+
+
+# Load Example
+
+def load_example():
+    global g
+
+    g = Graph()
+
+    for vertex in ["A", "B", "C", "D", "E", "F"]:
+        g.add_vertex(vertex)
+
+    g.add_edge("A", "B")
+    g.add_edge("A", "C")
+    g.add_edge("B", "D")
+    g.add_edge("B", "E")
+    g.add_edge("C", "F")
+
+    start_entry.delete(0, tk.END)
+    start_entry.insert(0, "A")
+
+    display_graph()
+
+    messagebox.showinfo(
+        "Example Loaded",
+        "Example graph loaded successfully.\n\n"
+        "Starting Vertex: A"
+    )
+
+
+# Main
+
+root = tk.Tk()
+
+root.title("BFS - Breadth-First Tree")
+root.geometry("750x850")
+root.configure(bg="#FFFFFF")
+root.resizable(False, False)
+
+
+title_frame = tk.Frame(
+    root,
+    bg="#F4C430"
+)
+title_frame.pack(fill="x")
+
+
+title_label = tk.Label(
+    title_frame,
+    text="BREADTH-FIRST SEARCH (BFS)",
+    font=("Arial", 23, "bold"),
+    bg="#F4C430",
+    fg="white",
+    pady=15
+)
+title_label.pack()
+
+
+subtitle = tk.Label(
+    root,
+    text="Breadth-First Tree | Data Structures Practical",
+    font=("Arial", 12, "bold"),
+    bg="#FFFFFF",
+    fg="#8A6D00"
+)
+subtitle.pack(pady=10)
+
+
+vertex_frame = tk.Frame(
+    root,
+    bg="#FFF9C4",
+    bd=2,
+    relief="groove"
+)
+vertex_frame.pack(
+    padx=35,
+    pady=8,
+    fill="x"
+)
+
+
+vertex_label = tk.Label(
+    vertex_frame,
+    text="Add Vertex:",
+    font=("Arial", 11, "bold"),
+    bg="#FFF9C4",
+    fg="#5D4E00"
+)
+vertex_label.grid(
+    row=0,
+    column=0,
+    padx=10,
+    pady=12
+)
+
+
+vertex_entry = tk.Entry(
+    vertex_frame,
+    font=("Arial", 11),
+    width=20,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex_entry.grid(
+    row=0,
+    column=1,
+    padx=10,
+    pady=12
+)
+
+
+vertex_button = tk.Button(
+    vertex_frame,
+    text="ADD VERTEX",
+    command=add_vertex,
+    font=("Arial", 10, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    activeforeground="white",
+    width=14,
+    bd=0,
+    cursor="hand2"
+)
+vertex_button.grid(
+    row=0,
+    column=2,
+    padx=10
+)
+
+
+edge_frame = tk.Frame(
+    root,
+    bg="#FFF59D",
+    bd=2,
+    relief="groove"
+)
+edge_frame.pack(
+    padx=35,
+    pady=8,
+    fill="x"
+)
+
+
+edge_label = tk.Label(
+    edge_frame,
+    text="Add Edge:",
+    font=("Arial", 11, "bold"),
+    bg="#FFF59D",
+    fg="#5D4E00"
+)
+edge_label.grid(
+    row=0,
+    column=0,
+    padx=10,
+    pady=12
+)
+
+
+vertex1_entry = tk.Entry(
+    edge_frame,
+    font=("Arial", 11),
+    width=10,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex1_entry.grid(
+    row=0,
+    column=1,
+    padx=5,
+    pady=12
+)
+
+
+dash_label = tk.Label(
+    edge_frame,
+    text="—",
+    font=("Arial", 14, "bold"),
+    bg="#FFF59D",
+    fg="#5D4E00"
+)
+dash_label.grid(
+    row=0,
+    column=2
+)
+
+
+vertex2_entry = tk.Entry(
+    edge_frame,
+    font=("Arial", 11),
+    width=10,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex2_entry.grid(
+    row=0,
+    column=3,
+    padx=5,
+    pady=12
+)
+
+
+edge_button = tk.Button(
+    edge_frame,
+    text="ADD EDGE",
+    command=add_edge,
+    font=("Arial", 10, "bold"),
+    bg="#D4AC0D",
+    fg="white",
+    activebackground="#B7950B",
+    activeforeground="white",
+    width=12,
+    bd=0,
+    cursor="hand2"
+)
+edge_button.grid(
+    row=0,
+    column=4,
+    padx=10
+)
+
+
+bfs_frame = tk.Frame(
+    root,
+    bg="#F9E79F",
+    bd=2,
+    relief="groove"
+)
+bfs_frame.pack(
+    padx=35,
+    pady=8,
+    fill="x"
+)
+
+
+start_label = tk.Label(
+    bfs_frame,
+    text="Starting Vertex:",
+    font=("Arial", 11, "bold"),
+    bg="#F9E79F",
+    fg="#5D4E00"
+)
+start_label.grid(
+    row=0,
+    column=0,
+    padx=10,
+    pady=12
+)
+
+
+start_entry = tk.Entry(
+    bfs_frame,
+    font=("Arial", 11),
+    width=15,
+    bg="white",
+    fg="#5D4E00"
+)
+start_entry.grid(
+    row=0,
+    column=1,
+    padx=10,
+    pady=12
+)
+
+
+bfs_button = tk.Button(
+    bfs_frame,
+    text="PERFORM BFS",
+    command=perform_bfs,
+    font=("Arial", 10, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    activeforeground="white",
+    width=15,
+    bd=0,
+    cursor="hand2"
+)
+bfs_button.grid(
+    row=0,
+    column=2,
+    padx=10
+)
+
+
+button_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+button_frame.pack(pady=8)
+
+
+example_button = tk.Button(
+    button_frame,
+    text="LOAD EXAMPLE",
+    command=load_example,
+    font=("Arial", 10, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    width=16,
+    height=2,
+    bd=0,
+    cursor="hand2"
+)
+example_button.grid(
+    row=0,
+    column=0,
+    padx=8
+)
+
+
+clear_button = tk.Button(
+    button_frame,
+    text="CLEAR ALL",
+    command=clear_all,
+    font=("Arial", 10, "bold"),
+    bg="#E0A800",
+    fg="white",
+    activebackground="#C49000",
+    width=16,
+    height=2,
+    bd=0,
+    cursor="hand2"
+)
+clear_button.grid(
+    row=0,
+    column=1,
+    padx=8
+)
+
+
+graph_result_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+graph_result_frame.pack(
+    padx=35,
+    pady=5,
+    fill="x"
+)
+
+
+bfs_result_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+bfs_result_frame.pack(
+    padx=35,
+    pady=5,
+    fill="both",
+    expand=True
+)
+
+
+footer = tk.Label(
+    root,
+    text="BFS | Breadth-First Tree | Data Structures",
+    font=("Arial", 9),
+    bg="#F4C430",
+    fg="white",
+    pady=7
+)
+footer.pack(
+    fill="x",
+    side="bottom"
+)
+
+
+root.mainloop()
+
+
+#9. C. Write a python program to implement Depth First Tree using Graph
+from collections import defaultdict
+
+
+# Graph Class
+
+class Graph:
+
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def dfs_tree(self, start):
+        visited = set()
+        dfs_tree = defaultdict(list)
+        traversal = []
+
+        def dfs(vertex):
+            visited.add(vertex)
+            traversal.append(vertex)
+
+            for neighbor in self.graph[vertex]:
+                if neighbor not in visited:
+                    dfs_tree[vertex].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+
+        return dfs_tree, traversal
+
+    def display(self):
+        print("\nGraph:")
+
+        for vertex, edges in self.graph.items():
+            print(vertex, ":", edges)
+
+
+# Main
+
+g = Graph()
+
+print("DEPTH-FIRST TREE USING GRAPH")
+
+print("\nEnter vertices:")
+vertices = input("Enter vertices separated by spaces: ").upper().split()
+
+for vertex in vertices:
+    g.add_vertex(vertex)
+
+
+print("\nEnter edges")
+print("Enter each edge as two vertices.")
+print("Type DONE when all edges are entered.")
+
+while True:
+
+    edge = input("Enter edge: ").upper().strip()
+
+    if edge == "DONE":
+        break
+
+    parts = edge.split()
+
+    if len(parts) != 2:
+        print("Please enter two vertices, for example: A B")
+        continue
+
+    vertex1 = parts[0]
+    vertex2 = parts[1]
+
+    if vertex1 not in g.graph or vertex2 not in g.graph:
+        print("Invalid vertices. Please use the vertices you entered.")
+        continue
+
+    g.add_edge(vertex1, vertex2)
+
+
+g.display()
+
+
+start_vertex = input(
+    "\nEnter starting vertex for DFS: "
+).upper().strip()
+
+
+if start_vertex not in g.graph:
+
+    print("Starting vertex does not exist.")
+
+else:
+
+    dfs_tree, traversal = g.dfs_tree(start_vertex)
+
+    print("\nDFS Traversal:")
+    print(" -> ".join(traversal))
+
+    print("\nDepth-First Tree:")
+
+    for vertex, children in dfs_tree.items():
+        print(vertex, "->", ", ".join(children))
+
+#GUI Version
+from collections import defaultdict
+import tkinter as tk
+from tkinter import messagebox
+
+
+# Graph Class
+
+class Graph:
+
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def dfs_tree(self, start):
+        visited = set()
+        dfs_tree = defaultdict(list)
+        traversal = []
+
+        def dfs(vertex):
+            visited.add(vertex)
+            traversal.append(vertex)
+
+            for neighbor in self.graph[vertex]:
+                if neighbor not in visited:
+                    dfs_tree[vertex].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+
+        return dfs_tree, traversal
+
+
+# Global Graph
+
+g = Graph()
+
+
+# Add Vertex
+
+def add_vertex():
+    vertex = vertex_entry.get().strip().upper()
+
+    if vertex == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter a vertex."
+        )
+        return
+
+    if vertex in g.graph:
+        messagebox.showwarning(
+            "Warning",
+            "Vertex already exists."
+        )
+        return
+
+    g.add_vertex(vertex)
+
+    vertex_entry.delete(0, tk.END)
+
+    display_graph()
+
+
+# Add Edge
+
+def add_edge():
+    vertex1 = vertex1_entry.get().strip().upper()
+    vertex2 = vertex2_entry.get().strip().upper()
+
+    if vertex1 == "" or vertex2 == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter both vertices."
+        )
+        return
+
+    if vertex1 not in g.graph or vertex2 not in g.graph:
+        messagebox.showerror(
+            "Error",
+            "Both vertices must exist first."
+        )
+        return
+
+    if vertex1 == vertex2:
+        messagebox.showerror(
+            "Error",
+            "A vertex cannot be connected to itself."
+        )
+        return
+
+    if vertex2 in g.graph[vertex1]:
+        messagebox.showwarning(
+            "Warning",
+            "This edge already exists."
+        )
+        return
+
+    g.add_edge(vertex1, vertex2)
+
+    vertex1_entry.delete(0, tk.END)
+    vertex2_entry.delete(0, tk.END)
+
+    display_graph()
+
+
+# Perform DFS
+
+def perform_dfs():
+    start = start_entry.get().strip().upper()
+
+    if start == "":
+        messagebox.showerror(
+            "Error",
+            "Please enter a starting vertex."
+        )
+        return
+
+    if start not in g.graph:
+        messagebox.showerror(
+            "Error",
+            "Starting vertex does not exist."
+        )
+        return
+
+    dfs_result, traversal = g.dfs_tree(start)
+
+    for widget in dfs_result_frame.winfo_children():
+        widget.destroy()
+
+    heading = tk.Label(
+        dfs_result_frame,
+        text="DEPTH-FIRST TREE",
+        font=("Arial", 14, "bold"),
+        bg="#FFFFFF",
+        fg="#8A6D00"
+    )
+    heading.pack(pady=5)
+
+    traversal_label = tk.Label(
+        dfs_result_frame,
+        text="DFS Traversal: " + " → ".join(traversal),
+        font=("Arial", 11, "bold"),
+        bg="#FFF59D",
+        fg="#5D4E00",
+        padx=10,
+        pady=7
+    )
+    traversal_label.pack(
+        pady=3,
+        padx=15,
+        fill="x"
+    )
+
+    for vertex in dfs_result:
+        children = dfs_result[vertex]
+
+        row = tk.Frame(
+            dfs_result_frame,
+            bg="#FFFDE7"
+        )
+        row.pack(
+            fill="x",
+            padx=20,
+            pady=2
+        )
+
+        parent_label = tk.Label(
+            row,
+            text=vertex,
+            font=("Arial", 10, "bold"),
+            width=7,
+            bg="#F4C430",
+            fg="white"
+        )
+        parent_label.pack(
+            side="left",
+            padx=3,
+            pady=3
+        )
+
+        child_text = ", ".join(children)
+
+        child_label = tk.Label(
+            row,
+            text="→  " + child_text,
+            font=("Arial", 10, "bold"),
+            bg="#FFF9C4",
+            fg="#5D4E00",
+            anchor="w"
+        )
+        child_label.pack(
+            side="left",
+            fill="x",
+            expand=True,
+            padx=3,
+            pady=3
+        )
+
+
+# Display Graph
+
+def display_graph():
+    for widget in graph_result_frame.winfo_children():
+        widget.destroy()
+
+    heading = tk.Label(
+        graph_result_frame,
+        text="CURRENT GRAPH",
+        font=("Arial", 13, "bold"),
+        bg="#FFFFFF",
+        fg="#8A6D00"
+    )
+    heading.pack(pady=4)
+
+    for vertex, edges in g.graph.items():
+
+        if edges:
+            edge_text = ", ".join(edges)
+        else:
+            edge_text = "No edges"
+
+        row = tk.Frame(
+            graph_result_frame,
+            bg="#FFF9C4"
+        )
+        row.pack(
+            fill="x",
+            padx=20,
+            pady=1
+        )
+
+        vertex_label = tk.Label(
+            row,
+            text=vertex,
+            font=("Arial", 10, "bold"),
+            width=6,
+            bg="#F4C430",
+            fg="white"
+        )
+        vertex_label.pack(
+            side="left",
+            padx=3,
+            pady=2
+        )
+
+        edges_label = tk.Label(
+            row,
+            text=edge_text,
+            font=("Arial", 10),
+            bg="#FFF9C4",
+            fg="#5D4E00",
+            anchor="w"
+        )
+        edges_label.pack(
+            side="left",
+            fill="x",
+            expand=True,
+            padx=3
+        )
+
+
+# Clear All
+
+def clear_all():
+    global g
+
+    g = Graph()
+
+    vertex_entry.delete(0, tk.END)
+    vertex1_entry.delete(0, tk.END)
+    vertex2_entry.delete(0, tk.END)
+    start_entry.delete(0, tk.END)
+
+    for widget in graph_result_frame.winfo_children():
+        widget.destroy()
+
+    for widget in dfs_result_frame.winfo_children():
+        widget.destroy()
+
+
+# Load Example
+
+def load_example():
+    global g
+
+    g = Graph()
+
+    for vertex in ["A", "B", "C", "D", "E", "F"]:
+        g.add_vertex(vertex)
+
+    g.add_edge("A", "B")
+    g.add_edge("A", "C")
+    g.add_edge("B", "D")
+    g.add_edge("B", "E")
+    g.add_edge("C", "F")
+
+    start_entry.delete(0, tk.END)
+    start_entry.insert(0, "A")
+
+    display_graph()
+
+    messagebox.showinfo(
+        "Example Loaded",
+        "Example graph loaded successfully."
+    )
+
+
+# Main
+
+root = tk.Tk()
+
+root.title("DFS - Depth-First Tree")
+
+root.geometry("700x650")
+
+root.configure(bg="#FFFFFF")
+
+root.resizable(False, False)
+
+
+title_frame = tk.Frame(
+    root,
+    bg="#F4C430"
+)
+title_frame.pack(fill="x")
+
+
+title_label = tk.Label(
+    title_frame,
+    text="DEPTH-FIRST SEARCH (DFS)",
+    font=("Arial", 19, "bold"),
+    bg="#F4C430",
+    fg="white",
+    pady=10
+)
+title_label.pack()
+
+
+subtitle = tk.Label(
+    root,
+    text="Depth-First Tree | Data Structures Practical",
+    font=("Arial", 10, "bold"),
+    bg="#FFFFFF",
+    fg="#8A6D00"
+)
+subtitle.pack(pady=5)
+
+
+vertex_frame = tk.Frame(
+    root,
+    bg="#FFF9C4",
+    bd=1,
+    relief="groove"
+)
+vertex_frame.pack(
+    padx=25,
+    pady=4,
+    fill="x"
+)
+
+
+vertex_label = tk.Label(
+    vertex_frame,
+    text="Add Vertex:",
+    font=("Arial", 10, "bold"),
+    bg="#FFF9C4",
+    fg="#5D4E00"
+)
+vertex_label.grid(
+    row=0,
+    column=0,
+    padx=8,
+    pady=7
+)
+
+
+vertex_entry = tk.Entry(
+    vertex_frame,
+    font=("Arial", 10),
+    width=18,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex_entry.grid(
+    row=0,
+    column=1,
+    padx=8,
+    pady=7
+)
+
+
+vertex_button = tk.Button(
+    vertex_frame,
+    text="ADD VERTEX",
+    command=add_vertex,
+    font=("Arial", 9, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    width=12,
+    bd=0
+)
+vertex_button.grid(
+    row=0,
+    column=2,
+    padx=8
+)
+
+
+edge_frame = tk.Frame(
+    root,
+    bg="#FFF59D",
+    bd=1,
+    relief="groove"
+)
+edge_frame.pack(
+    padx=25,
+    pady=4,
+    fill="x"
+)
+
+
+edge_label = tk.Label(
+    edge_frame,
+    text="Add Edge:",
+    font=("Arial", 10, "bold"),
+    bg="#FFF59D",
+    fg="#5D4E00"
+)
+edge_label.grid(
+    row=0,
+    column=0,
+    padx=8,
+    pady=7
+)
+
+
+vertex1_entry = tk.Entry(
+    edge_frame,
+    font=("Arial", 10),
+    width=8,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex1_entry.grid(
+    row=0,
+    column=1,
+    padx=4,
+    pady=7
+)
+
+
+dash_label = tk.Label(
+    edge_frame,
+    text="—",
+    font=("Arial", 12, "bold"),
+    bg="#FFF59D",
+    fg="#5D4E00"
+)
+dash_label.grid(
+    row=0,
+    column=2
+)
+
+
+vertex2_entry = tk.Entry(
+    edge_frame,
+    font=("Arial", 10),
+    width=8,
+    bg="white",
+    fg="#5D4E00"
+)
+vertex2_entry.grid(
+    row=0,
+    column=3,
+    padx=4,
+    pady=7
+)
+
+
+edge_button = tk.Button(
+    edge_frame,
+    text="ADD EDGE",
+    command=add_edge,
+    font=("Arial", 9, "bold"),
+    bg="#D4AC0D",
+    fg="white",
+    activebackground="#B7950B",
+    width=11,
+    bd=0
+)
+edge_button.grid(
+    row=0,
+    column=4,
+    padx=8
+)
+
+
+dfs_frame = tk.Frame(
+    root,
+    bg="#F9E79F",
+    bd=1,
+    relief="groove"
+)
+dfs_frame.pack(
+    padx=25,
+    pady=4,
+    fill="x"
+)
+
+
+start_label = tk.Label(
+    dfs_frame,
+    text="Starting Vertex:",
+    font=("Arial", 10, "bold"),
+    bg="#F9E79F",
+    fg="#5D4E00"
+)
+start_label.grid(
+    row=0,
+    column=0,
+    padx=8,
+    pady=7
+)
+
+
+start_entry = tk.Entry(
+    dfs_frame,
+    font=("Arial", 10),
+    width=12,
+    bg="white",
+    fg="#5D4E00"
+)
+start_entry.grid(
+    row=0,
+    column=1,
+    padx=8,
+    pady=7
+)
+
+
+dfs_button = tk.Button(
+    dfs_frame,
+    text="PERFORM DFS",
+    command=perform_dfs,
+    font=("Arial", 9, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    width=13,
+    bd=0
+)
+dfs_button.grid(
+    row=0,
+    column=2,
+    padx=8
+)
+
+
+button_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+button_frame.pack(pady=5)
+
+
+example_button = tk.Button(
+    button_frame,
+    text="LOAD EXAMPLE",
+    command=load_example,
+    font=("Arial", 9, "bold"),
+    bg="#F4C430",
+    fg="white",
+    activebackground="#D4AC0D",
+    width=14,
+    height=1,
+    bd=0
+)
+example_button.grid(
+    row=0,
+    column=0,
+    padx=6
+)
+
+
+clear_button = tk.Button(
+    button_frame,
+    text="CLEAR ALL",
+    command=clear_all,
+    font=("Arial", 9, "bold"),
+    bg="#E0A800",
+    fg="white",
+    activebackground="#C49000",
+    width=14,
+    height=1,
+    bd=0
+)
+clear_button.grid(
+    row=0,
+    column=1,
+    padx=6
+)
+
+
+graph_result_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+graph_result_frame.pack(
+    padx=25,
+    pady=2,
+    fill="x"
+)
+
+
+dfs_result_frame = tk.Frame(
+    root,
+    bg="#FFFFFF"
+)
+dfs_result_frame.pack(
+    padx=25,
+    pady=2,
+    fill="both",
+    expand=True
+)
+
+
+footer = tk.Label(
+    root,
+    text="DFS | Depth-First Tree | Data Structures",
+    font=("Arial", 8),
+    bg="#F4C430",
+    fg="white",
+    pady=5
+)
+footer.pack(
+    fill="x",
+    side="bottom"
+)
+
+
+root.mainloop()
